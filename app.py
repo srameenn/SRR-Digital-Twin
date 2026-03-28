@@ -6,13 +6,15 @@ from plotly.subplots import make_subplots
 from model import run_model
 from utils import plot_catalyst_deactivation, plot_pareto_front
 
+# Page configuration
 st.set_page_config(
     page_title="SRR Refinery Digital Twin",
     page_icon="🏭",
     layout="wide"
 )
 
-st.markdown(
+# Custom CSS styling
+st.markdown("""
 <style>
 .main {
     background-color: #08111f;
@@ -65,4 +67,9 @@ st.markdown(
 .metric-unit {
     color: #38bdf8;
     font-size: 14px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Page caption
 st.caption("Simulation model only. No live refinery historian or plant data connected.")
