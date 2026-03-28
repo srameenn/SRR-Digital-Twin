@@ -101,7 +101,6 @@ naphthenes = st.sidebar.slider("Feed Naphthenes (%)", 10, 40, 30)
 aromatics = st.sidebar.slider("Feed Aromatics (%)", 5, 20, 12)
 
 results = run_model(stream_days, naphthenes, aromatics)
-
 # ----------- KPI Cards -----------
 col1, col2, col3, col4, col5 = st.columns(5)
 
