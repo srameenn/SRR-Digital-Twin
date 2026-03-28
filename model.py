@@ -1,32 +1,43 @@
 import numpy as np
 
-def run_model(days, wait, h2hc, feed):
+def run_model(days, naphthenes, aromatics):
 
-    # ---------------- Catalyst Deactivation ----------------
-    deactivation = np.exp(-0.003 * days)
+    # Temperature increases slightly with catalyst aging
+    temperature = 485 + 0.03 * days
 
-    # ---------------- RON Model ----------------
+    # Hydrogen to hydrocarbon ratio
+    h2_hc = 4.5 - 0.0015 * days + 0.002 * (naphthenes - 30)
+
+    # Predicted RON
     ron = (
-        0.18 * wait +
-        0.4 * feed -
-        2.5 * h2hc
-    ) * deactivation
-
-    # ---------------- Yield Model ----------------
-    yield_c5 = (
-        100 -
-        0.04 * wait +
-        0.1 * feed -
-        1.2 * h2hc
-    ) * deactivation
-
-    # ---------------- Coke Risk Model ----------------
-    coke = (
-        0.02 * wait -
-        0.1 * h2hc +
-        0.03 * days
+        88
+        + 0.18 * (temperature - 485)
+        + 0.12 * (naphthenes - 30)
+        + 0.20 * (aromatics - 10)
+        - 0.015 * days
     )
 
-    coke = max(0, min(coke, 1))  # normalize 0–1
+    # Predicted C5+ yield
+    yield_c5 = (
+        92
+        - 0.06 * (temperature - 485)
+        + 0.05 * (naphthenes - 30)
+        - 0.03 * (aromatics - 10)
+    )
 
-    return ron, yield_c5, coke
+    # Coke formation risk
+    coke = max(
+        0,
+        0.12
+        + 0.0009 * (temperature - 485) ** 2
+        + 0.0015 * days
+        - 0.01 * h2_hc
+    )
+
+    return {
+        "temperature": temperature,
+        "h2_hc": h2_hc,
+        "ron": ron,
+        "yield": yield_c5,
+        "coke": coke
+    }
