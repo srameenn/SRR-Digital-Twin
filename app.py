@@ -2,74 +2,53 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-
 from model import run_model
 from utils import plot_catalyst_deactivation, plot_pareto_front
 
-# Page configuration
 st.set_page_config(
     page_title="SRR Refinery Digital Twin",
     page_icon="🏭",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# Custom CSS styling
+# ----------- Custom Industrial Theme -----------
 st.markdown("""
 <style>
 .main {
-    background-color: #08111f;
+    background: linear-gradient(135deg, #08111f 0%, #0f1c2e 100%);
 }
 
 .block-container {
     padding-top: 1rem;
     padding-bottom: 1rem;
-    max-width: 1450px;
+    max-width: 1500px;
 }
 
 [data-testid="stSidebar"] {
-    background-color: #0f1724;
+    background: #0b1624;
+    border-right: 1px solid #1d324d;
 }
 
-.title {
+.dashboard-title {
     font-size: 42px;
     font-weight: 800;
-    color: #e2e8f0;
+    color: #e8f1ff;
+    margin-bottom: 0;
 }
 
-.subtitle {
+.dashboard-subtitle {
+    color: #8ea7c2;
     font-size: 16px;
-    color: #94a3b8;
-    margin-bottom: 30px;
+    margin-top: -10px;
+    margin-bottom: 20px;
 }
 
-.metric-card {
-    background: linear-gradient(145deg, #132238, #0b1725);
-    border: 1px solid #22354a;
+.card {
+    background: rgba(18, 32, 51, 0.95);
+    border: 1px solid #243b57;
     border-radius: 18px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0px 0px 12px rgba(0,0,0,0.35);
+    padding: 18px;
+    box-shadow: 0 0 18px rgba(0,0,0,0.25);
 }
-
-.metric-label {
-    color: #94a3b8;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.metric-value {
-    color: white;
-    font-size: 34px;
-    font-weight: 700;
-}
-
-.metric-unit {
-    color: #38bdf8;
-    font-size: 14px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# Page caption
-st.caption("Simulation model only. No live refinery historian or plant data connected.")
+st.caption("Simulation environment for catalytic reforming optimization. Not connected to real plant historian data.")
