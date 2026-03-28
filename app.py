@@ -1,75 +1,68 @@
+import streamlit as st
 import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
-    # More hydrogen is added with age to control coke
-    h2_hc = 4.0 + 0.004 * days_on_stream
-    h2_hc = np.clip(h2_hc, 4.0, 5.5)
+from model import run_model
+from utils import plot_catalyst_deactivation, plot_pareto_front
 
-    # ------------------------------
-    # RELATIONSHIPS
-    # ------------------------------
-    # Temperature: directly proportional to RON and coke
-    # Pressure: inversely proportional to RON, directly proportional to yield
-    # H2/HC: inversely proportional to coke, slightly inversely to RON
-    # Naphthenes: strongly directly proportional to RON
-    # Aromatics in feed: directly proportional to RON
+st.set_page_config(
+    page_title="SRR Refinery Digital Twin",
+    page_icon="🏭",
+    layout="wide"
+)
 
-    # Reformate RON
-    ron = (
-        84
-        + 0.24 * (temperature - 490)
-        - 0.50 * (pressure - 15)
-        - 0.70 * (h2_hc - 4)
-        + 0.40 * (naphthenes - 25)
-        + 0.32 * (aromatics_feed - 10)
-        + 13 * (catalyst_activity - 0.8)
-    )
-    ron = np.clip(ron, 84, 102)
+st.markdown("""
+<style>
+.main {
+    background-color: #08111f;
+}
 
-    # C5+ liquid yield
-    c5_yield = (
-        92
-        - 0.11 * (temperature - 490)
-        + 0.22 * (pressure - 15)
-        - 0.22 * (h2_hc - 4)
-        + 0.08 * (naphthenes - 25)
-        - 4.5 * (1 - catalyst_activity)
-    )
-    c5_yield = np.clip(c5_yield, 82, 96)
+.block-container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    max-width: 1450px;
+}
 
-    # Coke formation index
-    coke = (
-        0.12
-        + 0.016 * (temperature - 490)
-        - 0.045 * (h2_hc - 4)
-        - 0.010 * (pressure - 15)
-        + 0.0018 * days_on_stream
-        + 0.002 * max(0, naphthenes - 30)
-    )
-    coke = np.clip(coke, 0.05, 1.0)
+[data-testid="stSidebar"] {
+    background-color: #0f1724;
+}
 
-    # Hydrogen production
-    hydrogen = (
-        120
-        + 1.8 * (temperature - 490)
-        + 0.9 * (naphthenes - 25)
-        + 1.4 * (aromatics_feed - 10)
-    )
+.title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #e2e8f0;
+}
 
-    # Overall performance score
-    score = (
-        0.55 * ron
-        + 0.30 * c5_yield
-        - 10 * coke
-    )
+.subtitle {
+    font-size: 16px;
+    color: #94a3b8;
+    margin-bottom: 30px;
+}
 
-    return {
-        "temperature": round(float(temperature), 1),
-        "pressure": round(float(pressure), 1),
-        "h2_hc": round(float(h2_hc), 2),
-        "ron": round(float(ron), 2),
-        "yield": round(float(c5_yield), 2),
-        "coke": round(float(coke), 2),
-        "hydrogen": round(float(hydrogen), 1),
-        "activity": round(float(catalyst_activity), 3),
-        "score": round(float(score), 2)
-    }
+.metric-card {
+    background: linear-gradient(145deg, #132238, #0b1725);
+    border: 1px solid #22354a;
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 0px 12px rgba(0,0,0,0.35);
+}
+
+.metric-label {
+    color: #94a3b8;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.metric-value {
+    color: white;
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.metric-unit {
+    color: #38bdf8;
+    font-size: 14px;
+st.caption("Simulation model only. No live refinery historian or plant data connected.")
