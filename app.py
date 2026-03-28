@@ -94,13 +94,17 @@ st.markdown('<div class="dashboard-title">🏭 SRR Refinery Digital Twin</div>',
 st.markdown('<div class="dashboard-subtitle">Advanced Catalytic Reforming Control Room | Physics-Informed Optimization Platform</div>', unsafe_allow_html=True)
 
 # ----------- Sidebar Inputs -----------
-st.sidebar.title("Plant Inputs")
+stream_days = st.sidebar.slider(
+    "Days on Stream", 0, 400, 120
+)
 
-stream_days = st.sidebar.slider("Catalyst Age (Days on Stream)", 0, 400, 180)
-naphthenes = st.sidebar.slider("Feed Naphthenes (%)", 10, 40, 30)
-aromatics = st.sidebar.slider("Feed Aromatics (%)", 5, 20, 12)
+naphthenes = st.sidebar.slider(
+    "Feed Naphthenes (wt%)", 15, 45, 28
+)
 
-results = run_model(stream_days, naphthenes, aromatics)
+aromatics = st.sidebar.slider(
+    "Feed Aromatics (wt%)", 5, 25, 10
+)
 # ----------- KPI Cards -----------
 col1, col2, col3, col4, col5 = st.columns(5)
 
