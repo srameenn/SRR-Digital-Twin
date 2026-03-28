@@ -1,4 +1,21 @@
 import numpy as np
+
+def run_model(days_on_stream, naphthenes, aromatics_feed):
+    # Catalyst activity decreases with age
+    catalyst_activity = max(0.68, 1.0 - 0.0008 * days_on_stream)
+
+    # Recommended operating conditions
+    temperature = 490 + 0.05 * days_on_stream
+    temperature = np.clip(temperature, 490, 525)
+
+    pressure = 18 - 0.012 * days_on_stream
+    pressure = np.clip(pressure, 12, 18)
+
+    h2_hc = 4.0 + 0.004 * days_on_stream
+    h2_hc = np.clip(h2_hc, 4.0, 5.5)
+
+    # Reformate RON model
+    ron = (
         84
         + 0.24 * (temperature - 490)
         - 0.50 * (pressure - 15)
@@ -40,11 +57,7 @@ import numpy as np
     )
 
     # Overall performance score
-    score = (
-        0.55 * ron
-        + 0.30 * c5_yield
-        - 10 * coke
-    )
+    score = 0.55 * ron + 0.30 * c5_yield - 10 * coke
 
     return {
         "temperature": round(float(temperature), 1),
