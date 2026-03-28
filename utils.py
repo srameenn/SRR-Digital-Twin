@@ -1,13 +1,11 @@
 import numpy as np
 import plotly.graph_objects as go
 
-
 def plot_catalyst_deactivation():
     days = np.arange(0, 401)
     activity = np.maximum(0.68, 1.0 - 0.0008 * days)
 
     fig = go.Figure()
-
     fig.add_trace(go.Scatter(
         x=days,
         y=activity,
@@ -25,18 +23,14 @@ def plot_catalyst_deactivation():
         font=dict(color="white"),
         height=400
     )
-
     return fig
-
 
 def plot_pareto_front():
     temperature = np.linspace(490, 525, 50)
-
     ron = 88 + 0.22 * (temperature - 490)
     yield_curve = 94 - 0.12 * (temperature - 490)
 
     fig = go.Figure()
-
     fig.add_trace(go.Scatter(
         x=yield_curve,
         y=ron,
@@ -55,5 +49,4 @@ def plot_pareto_front():
         font=dict(color="white"),
         height=400
     )
-
     return fig
