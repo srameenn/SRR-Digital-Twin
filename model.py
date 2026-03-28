@@ -9,7 +9,7 @@ import numpy as np
     )
     ron = np.clip(ron, 84, 102)
 
-    # C5+ liquid yield
+    # C5+ liquid yield model
     c5_yield = (
         92
         - 0.11 * (temperature - 490)
@@ -20,7 +20,7 @@ import numpy as np
     )
     c5_yield = np.clip(c5_yield, 82, 96)
 
-    # Coke formation index
+    # Coke tendency model
     coke = (
         0.12
         + 0.016 * (temperature - 490)
@@ -31,7 +31,7 @@ import numpy as np
     )
     coke = np.clip(coke, 0.05, 1.0)
 
-    # Hydrogen production
+    # Hydrogen generation
     hydrogen = (
         120
         + 1.8 * (temperature - 490)
